@@ -1,0 +1,11 @@
+@attribute AG (Yong,Pre-Presbyopic,Presbyopic)
+@attribute SP (Myope,Hypermetrope)
+@attribute AS (Yes,No)
+@attribute TP (Normal,Reduced)
+@attribute Class (Hard,None,Soft)
+
+@data AG (Young,Young,Young,Young,Young,Young,Young,Young,Pre-presbyopic,Pre-presbyopic,Pre-presbyopic,Pre-presbyopic,Pre-presbyopic,Pre-presbyopic,Pre-presbyopic,Pre-presbyopic,Presbyopic,Presbyopic,Presbyopic,Presbyopic,Presbyopic,Presbyopic,Presbyopic,Presbyopic)
+@data SP (Myope,Myope,Myope,Myope,Hypermetrope,Hypermetrope,Hypermetrope,Hypermetrope,Myope,Myope,Myope,Myope,Hypermetrope,Hypermetrope,Hypermetrope,Hypermetrope,Myope,Myope,Myope,Myope,Hypermetrope,Hypermetrope,Hypermetrope,Hypermetrope)
+@data AS (Yes,Yes,No,No,No,No,Yes,Yes,No,No,Yes,Yes,No,No,Yes,Yes,No,No,Yes,Yes,No,No,Yes,Yes)
+@data TP (Normal,Reduced,Reduced,Normal,Reduced,Normal,Reduced,Normal,Reduced,Normal,Reduced,Normal,Reduced,Normal,Reduced,Normal,Reduced,Normal,Reduced,Normal,Reduced,Normal,Reduced,Normal)
+@data Class (Hard,None,None,Soft,None,Soft,None,Hard,None,Soft,None,Hard,None,Soft,None,None,None,None,None,Hard,None,Soft,None,None)

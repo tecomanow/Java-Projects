@@ -1,0 +1,90 @@
+
+    /**
+     * This method return a array of data from Excel
+     *
+     * @return
+     */
+    public static void recoverDate_um() {
+
+        //Create a FileInputStream for can manipule the file
+        FileInputStream fisPlanilha = null;
+        //Create a array to store the date
+        trainningSet = null;
+
+        try {
+            //Here, we use a library Workboot to get the XLS file
+            Workbook workbook = Workbook.getWorkbook(new File("src/TranningSet.xls"));
+
+            //Here we take the first table. Excel can have many tables, here
+            //we take the first of them
+            Sheet sheet = workbook.getSheet(0);
+
+            //It take the number of rows and columns and
+            //create a array
+            linhas = sheet.getRows();
+            colunas = sheet.getColumns();
+            trainningSet = new String[linhas][colunas];
+
+            //Take the contants of the cells and
+            //store into the array
+            for (int i = 0; i < linhas; i++) {
+                for (int j = 0; j < colunas; j++) {
+                    Cell celula = sheet.getCell(j, i);
+                    trainningSet[i][j] = celula.getContents();
+                }
+
+            }
+
+            //This method was created just to test
+            /*for (int i = 0; i < 1; i++) {
+                for (int j = 0; j < colunas; j++) {
+                    System.out.println(trainningSet[i][j]);
+                }
+            }*/
+            //Necessary, but I don't know for what. I think
+            //it is similary to fclose in C.
+            workbook.close();
+
+        } catch (FileNotFoundException ex) {
+            Logger.getLogger(Prism.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException ex) {
+            Logger.getLogger(TrainningSet.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (BiffException ex) {
+            Logger.getLogger(TrainningSet.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        //return trainningSet;
+    }
+
+    public String[] getColumnTarget() {
+
+        String[] atributos = new String[4];
+        int index = 0;
+
+        for (int i = 0; i < linhas; i++) {
+            for (int j = 0; j < colunas; j++) {
+
+                if (i < 1) {
+                    //System.out.println(trainningSet[i][j]);
+                    attr = new Attribute(trainningSet[i][j]);
+                    //System.out.println(attr.name);
+                } else {
+
+                    //if(trainningSet[i][j].equals("Class")){
+                    //break;
+                    //index = j;
+                    System.out.println(trainningSet[i][j]);
+                    //}
+                    //AttribList attrList = new AttribList();
+                    //attr = new Attribute("Outlook");
+                    //value = new Value(trainningSet[i][j]);
+                    //attr.addValue(value);
+                    //attrList.newAttribute(attr);
+                }
+            }
+        }
+
+        return null;
+    }
+
+}
