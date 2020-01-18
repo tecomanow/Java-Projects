@@ -18,6 +18,7 @@ import prism.Prism;
 public class TrainningSet {
 
     private AttribList attrList = new AttribList();
+    private AttribList AttribListDados = new AttribList();
     private Attribute attr;
     private Value value;
 
@@ -38,7 +39,7 @@ public class TrainningSet {
         TrainningSet myClone = new TrainningSet();
         return myClone;
     }
-    
+
     public AttribList pegarDados(String arq) throws IOException {
 
         String local = "src/arquivos/" + arq + ".txt";
@@ -55,14 +56,14 @@ public class TrainningSet {
         while (reader.ready()) {
 
             palavra = reader.readLine();
-            if (palavra.contains("@data")) {
+            if (palavra.contains("@data") && !palavra.contains("Class")) {
                 picotada = palavra.split(" ");
                 attr = new Attribute(picotada[1]);
                 //System.out.println(picotada[1]);
                 for (int i = 2; i < picotada.length; i++) {
                     //System.out.println(picotada[i]);
                     atributoListAux = picotada[i];
-                    //System.out.println(atributoListAux);
+                    //System.out.println(aux);
                     atributoListAux = removeParenteses(atributoListAux);
                     //System.out.println(k);
                     //System.out.println(atributoListAux);
@@ -71,21 +72,39 @@ public class TrainningSet {
                         //System.out.println(atributos[j]);
                         value = new Value(atributos[j]);
                         attr.values.add(value);
-                        //System.out.println(j);
                     }
 
-                    //System.out.println(attr.name);
-                    //System.out.println(attr.values.get(1).name);
+                    //System.out.println();
                 }
-            attrList.attributes.add(attr);
-            } 
-            
-  
+                AttribListDados.attributes.add(attr);
+            } else if (palavra.contains("@data") && palavra.contains("Class")) {
+
+                picotada = palavra.split(" ");
+                AttribListDados.classAttribute = new Attribute(picotada[1]);
+                //System.out.println(picotada[1]);
+                for (int i = 2; i < picotada.length; i++) {
+                    //System.out.println(picotada[i]);
+                    atributoListAux = picotada[i];
+                    //System.out.println(aux);
+                    atributoListAux = removeParenteses(atributoListAux);
+                    //System.out.println(k);
+                    //System.out.println(atributoListAux);
+                    atributos = atributoListAux.split(",");
+                    for (int j = 0; j < atributos.length; j++) {
+                        //System.out.println(atributos[j]);
+                        value = new Value(atributos[j]);
+                        AttribListDados.classAttribute.values.add(value);
+                    }
+                }
+               AttribListDados.attributes.add(attr);
+            }
+
+            //attrList.attributes.add(attr);
         }
-        //System.out.println(attrList.attributes.size());
-        //verificarAtributos();
+
+        //verificarAtributos(attrList);
         reader.close();
-        return attrList;
+        return AttribListDados;
 
     }
 
@@ -156,7 +175,10 @@ public class TrainningSet {
 
     }
 
-    public void verificarAtributos() {
+    public void verificarAtributos(AttribList attrList) {
+        
+        int tamanhoValorClass = attrList.classAttribute.values.size();
+        System.out.println("O tamanho da ClassValue é: " + tamanhoValorClass);
 
         for (int k = 0; k < attrList.attributes.size(); k++) {
 
@@ -169,15 +191,15 @@ public class TrainningSet {
                 System.out.println(teste.values.get(i).name);
             }
         }
-        
+
         Attribute teste = attrList.classAttribute;
 
-            System.out.println("=========ATRIBUTO CLASSE============");
-            System.out.println("Atributo: " + teste.name);
-            System.out.println("Valores:");
-            for (int i = 0; i < teste.values.size(); i++) {
-                System.out.println(teste.values.get(i).name);
-            }
+        System.out.println("=========ATRIBUTO CLASSE============");
+        System.out.println("Atributo: " + teste.name);
+        System.out.println("Valores:");
+        for (int i = 0; i < teste.values.size(); i++) {
+            System.out.println(teste.values.get(i).name);
+        }
 
     }
 

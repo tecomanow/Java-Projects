@@ -44,16 +44,42 @@ public class AttribList {
 
         TrainningSet ts = new TrainningSet();
         AttribList attrListDados = ts.pegarDados("trainningSet");
-        AttribList attrListTotal = ts.pegarAtributos("trainningSet");
+        AttribList possiveisAttrValues = ts.pegarAtributos("trainningSet");
+        int index = 0;
         Attribute attr;
         Value value;
+        int vezesQueApareceu = 0;
 
-        Attribute teste1;
-        Attribute teste2;
-        Attribute teste3;
+        /*for (Value v : possiveisAttrValues.getClassValues()) {
 
-        for (Value v : attrListTotal.getClassValues()) {
-            
+            for (Attribute attribute : attrListDados.attributes) {
+                //System.out.println("----ATRIBUTO----");
+                for (Value values : attribute.getValues()) {
+                    //System.out.println(attribute.name + " Valores: " + values.name);
+                    if (v.name.equals(values.name)) {
+
+                    }
+
+                }
+
+            }
+
+        }*/
+        for (Value v : possiveisAttrValues.getClassValues()) {
+
+            //System.out.println(att.values.size());
+            //System.out.println(attrListDados.classAttribute.values.size());
+            for (int i = 0; i < 24; i++) {
+                Attribute att = attrListDados.attributes.get(index);
+                Value attAttributeValue = att.values.get(i);
+                Value attClassValue = attrListDados.classAttribute.values.get(i);
+                //System.out.println("Atributo: " + att.name + " /" + " Valor: " + attAttributeValue.name +  " /" + " Class: " + attClassValue.name);
+
+                if (v.name.equalsIgnoreCase(attClassValue.name)) {
+                    System.out.println(att.name + " Valor: " + attAttributeValue.name + " Class: " + attClassValue.name);
+                }
+            }
+            index++;
         }
 
         return null;

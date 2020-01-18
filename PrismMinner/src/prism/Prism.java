@@ -19,6 +19,7 @@ public class Prism {
     public static void main(String[] args) throws IOException {
         TrainningSet trainningset = new TrainningSet();
         AttribList attrList = trainningset.pegarDados("trainningSet");
+        AttribList attrListTotal = trainningset.pegarAtributos("trainningSet");
         attrList.bestAtValue();
         //String[][] aa = trainningset.recoverDate();
         //trainningset.getColumnTarget();
