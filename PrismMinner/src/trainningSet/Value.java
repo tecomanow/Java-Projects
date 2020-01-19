@@ -3,6 +3,7 @@ package trainningSet;
 public class Value {
 
     String name;
+    float probability = 0;
 
     public Value(String name) {
         super();
@@ -16,5 +17,15 @@ public class Value {
     public void setName(String name) {
         this.name = name;
     }
+
+    public float getProbability() {
+        return probability;
+    }
+
+    public void setProbability(float probability) {
+        this.probability = probability;
+    }
+    
+    
 
 }

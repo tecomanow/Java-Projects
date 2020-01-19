@@ -17,10 +17,10 @@ import prism.Prism;
 
 public class TrainningSet {
 
-    private AttribList attrList = new AttribList();
-    private AttribList AttribListDados = new AttribList();
-    private Attribute attr;
-    private Value value;
+    private  AttribList attrList = new AttribList();
+    private  AttribList AttribListDados = new AttribList();
+    private  Attribute attr;
+    private  Value value;
 
     /**
      * Create a constructor for trainningSet, in this case when we instantiate
@@ -40,7 +40,7 @@ public class TrainningSet {
         return myClone;
     }
 
-    public AttribList pegarDados(String arq) throws IOException {
+    public  AttribList pegarDados(String arq) throws IOException {
 
         String local = "src/arquivos/" + arq + ".txt";
         String palavra = "";
@@ -110,7 +110,7 @@ public class TrainningSet {
 
     }
 
-    public AttribList pegarAtributos(String arq) throws IOException {
+    public  AttribList pegarAtributos(String arq) throws IOException {
 
         String local = "src/arquivos/" + arq + ".txt";
         String palavra = "";
