@@ -73,10 +73,11 @@ public class TrainningSet {
                         value = new Value(atributos[j]);
                         attr.values.add(value);
                     }
-
-                    //System.out.println();
                 }
-                AttribListDados.attributes.add(attr);
+                if (!AttribListDados.attributes.contains(attr)) {
+                    AttribListDados.attributes.add(attr);
+                }
+
             } else if (palavra.contains("@data") && palavra.contains("Class")) {
 
                 picotada = palavra.split(" ");
@@ -96,13 +97,14 @@ public class TrainningSet {
                         AttribListDados.classAttribute.values.add(value);
                     }
                 }
-               AttribListDados.attributes.add(attr);
+                if (!AttribListDados.attributes.contains(attr)) {
+                    AttribListDados.attributes.add(attr);
+                }
             }
 
-            //attrList.attributes.add(attr);
         }
 
-        //verificarAtributos(attrList);
+        //verificarAtributos(AttribListDados);
         reader.close();
         return AttribListDados;
 
@@ -169,14 +171,14 @@ public class TrainningSet {
             attrList.attributes.add(attr);
         }
 
-        //verificarAtributos();
+        //verificarAtributos(attrList);
         reader.close();
         return attrList;
 
     }
 
     public void verificarAtributos(AttribList attrList) {
-        
+
         int tamanhoValorClass = attrList.classAttribute.values.size();
         System.out.println("O tamanho da ClassValue é: " + tamanhoValorClass);
 
