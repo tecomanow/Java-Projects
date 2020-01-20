@@ -1,4 +1,4 @@
-@attribute AG (Yong,Pre-Presbyopic,Presbyopic)
+@attribute AG (Young,Pre-presbyopic,Presbyopic)
 @attribute SP (Myope,Hypermetrope)
 @attribute AS (Yes,No)
 @attribute TP (Normal,Reduced)

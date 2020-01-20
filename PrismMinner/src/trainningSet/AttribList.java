@@ -80,7 +80,7 @@ public class AttribList {
             }
 
         }
-        // System.out.println("=============VERIFICANDO MAP - FREQUENCIA " + v.name.toUpperCase() + "================");
+        //System.out.println("=============VERIFICANDO MAP - FREQUENCIA " + v.name.toUpperCase() + "================");
         for (Map.Entry<String, Integer> entry : mapFrequencia.entrySet()) {
             //System.out.println("Valor: " + entry.getKey() + " Freq: " + entry.getValue());
 
@@ -89,9 +89,9 @@ public class AttribList {
 
         contarFrequencia();
 
-        calcularProbabilidade(mapFrequencia, mapOcorrencia);
-        
-        return null;
+        Attribute bestAtValue = calcularProbabilidade(mapFrequencia, mapOcorrencia);
+
+        return bestAtValue;
     }
 
     public void contarFrequencia() throws IOException {
@@ -123,10 +123,10 @@ public class AttribList {
 
     }
 
-    public void calcularProbabilidade(Map<String, Integer> frequencia, Map<String, Integer> ocorrencia) throws IOException {
+    public Attribute calcularProbabilidade(Map<String, Integer> frequencia, Map<String, Integer> ocorrencia) throws IOException {
 
         TrainningSet ts = new TrainningSet();
-        AttribList attrListDados = ts.pegarDados("trainningSet");
+        AttribList attrListAtributos = ts.pegarAtributos("trainningSet");
         Attribute atributo = null;
         ArrayList<Attribute> atributosCandidatos = new ArrayList<Attribute>();
         Value valor = null;
@@ -137,30 +137,50 @@ public class AttribList {
 
                 if (entry.getKey().equals(entry2.getKey())) {
                     String nomeAtributoValor = entry.getKey();
+                    String nomeAtributoValor2 = entry2.getKey();
+                    //System.out.println(nomeAtributoValor + " = " + nomeAtributoValor2);
+
                     int a = entry.getValue();
                     int b = entry2.getValue();
 
                     float probabilidade = (float) a / b;
 
-                    for (Attribute attrAtual : attrListDados.attributes) {
+                    for (Attribute attrAtual : attrListAtributos.attributes) {
                         for (Value valorAtualAttr : attrAtual.values) {
                             if (valorAtualAttr.name.equals(nomeAtributoValor)) {
-                                    atributo = new Attribute(attrAtual.name);
-                                    valor = new Value(valorAtualAttr.name);
-                                    valor.setProbability(probabilidade);
-                                    //System.out.println("Atributo: " + attrAtual.name + " Valor: " + valorAtualAttr.name + " Probabilidade: " + valor.getProbability());
-                                    atributosCandidatos.add(atributo);
+                                //System.out.println(attrAtual.name + valorAtualAttr.name);
+                                atributo = new Attribute(attrAtual.name);
+                                valor = new Value(valorAtualAttr.name);
+                                valor.setProbability(probabilidade);
+                                atributo.values.add(valor);
+                                System.out.println("Atributo: " + attrAtual.name + " Valor: " + valorAtualAttr.name + " Probabilidade: " + valor.getProbability());
                             }
                         }
-
                     }
-
+                    atributosCandidatos.add(atributo);
                     //System.out.println("Atributo: " + entry.getKey() + " "+ "Frequencia: " + a + " = " + entry2.getKey() + "/" + " Ocorrencia: " + b + " Probabilidade: " + probabilidade);
                 }
-
             }
-
         }
         
+        Attribute bestAtValue = null;
+        float probabilidade = 0;
+        for (Attribute attrAtual2 : atributosCandidatos) {
+            for (Value valorAtualAttr2 : attrAtual2.values) {
+                if(valorAtualAttr2.getProbability() > probabilidade){
+                    bestAtValue = attrAtual2;
+                    probabilidade = valorAtualAttr2.getProbability();
+                    //System.out.println(probabilidade);
+                    System.out.println("===============");
+                    System.out.println("O melhor atributo-valor é: ");
+                    System.out.println("Atributo: " + bestAtValue.name + " - " + valorAtualAttr2.name + " | Probabilidade: " + valorAtualAttr2.getProbability());
+                    System.out.println("===============");
+                }               
+            }
+        }
+        
+        
+        //System.out.println(bestAtValue.name + " = " + bestAtValue.values.get(0).name);
+        return bestAtValue;
     }
 }

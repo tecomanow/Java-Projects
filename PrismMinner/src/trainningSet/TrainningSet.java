@@ -17,10 +17,10 @@ import prism.Prism;
 
 public class TrainningSet {
 
-    private  AttribList attrList = new AttribList();
-    private  AttribList AttribListDados = new AttribList();
-    private  Attribute attr;
-    private  Value value;
+    private AttribList attrList = new AttribList();
+    private AttribList AttribListDados = new AttribList();
+    private Attribute attr;
+    private Value value;
 
     /**
      * Create a constructor for trainningSet, in this case when we instantiate
@@ -40,7 +40,7 @@ public class TrainningSet {
         return myClone;
     }
 
-    public  AttribList pegarDados(String arq) throws IOException {
+    public AttribList pegarDados(String arq) throws IOException {
 
         String local = "src/arquivos/" + arq + ".txt";
         String palavra = "";
@@ -110,7 +110,7 @@ public class TrainningSet {
 
     }
 
-    public  AttribList pegarAtributos(String arq) throws IOException {
+    public AttribList pegarAtributos(String arq) throws IOException {
 
         String local = "src/arquivos/" + arq + ".txt";
         String palavra = "";
@@ -143,7 +143,10 @@ public class TrainningSet {
                         value = new Value(atributos[j]);
                         attr.values.add(value);
                     }
+                    if (!attrList.attributes.contains(attr)) {
+                        attrList.attributes.add(attr);
 
+                    }
                     //System.out.println();
                 }
             } else if (palavra.contains("@attribute") && palavra.contains("Class")) {
@@ -165,10 +168,12 @@ public class TrainningSet {
                         attrList.classAttribute.values.add(value);
                     }
                 }
+                if (!attrList.attributes.contains(attr)) {
+                    attrList.attributes.add(attr);
 
+                }
             }
 
-            attrList.attributes.add(attr);
         }
 
         //verificarAtributos(attrList);
@@ -178,9 +183,6 @@ public class TrainningSet {
     }
 
     public void verificarAtributos(AttribList attrList) {
-
-        int tamanhoValorClass = attrList.classAttribute.values.size();
-        System.out.println("O tamanho da ClassValue é: " + tamanhoValorClass);
 
         for (int k = 0; k < attrList.attributes.size(); k++) {
 
@@ -192,15 +194,6 @@ public class TrainningSet {
             for (int i = 0; i < teste.values.size(); i++) {
                 System.out.println(teste.values.get(i).name);
             }
-        }
-
-        Attribute teste = attrList.classAttribute;
-
-        System.out.println("=========ATRIBUTO CLASSE============");
-        System.out.println("Atributo: " + teste.name);
-        System.out.println("Valores:");
-        for (int i = 0; i < teste.values.size(); i++) {
-            System.out.println(teste.values.get(i).name);
         }
 
     }
