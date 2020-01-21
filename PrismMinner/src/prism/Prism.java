@@ -7,6 +7,7 @@ package prism;
 
 import java.io.IOException;
 import trainningSet.AttribList;
+import trainningSet.Attribute;
 import trainningSet.TrainningSet;
 import trainningSet.Value;
 
@@ -20,7 +21,8 @@ public class Prism {
         TrainningSet trainningset = new TrainningSet();
         AttribList attrList = trainningset.pegarDados("trainningSet");
         AttribList attrListTotal = trainningset.pegarAtributos("trainningSet");
-        attrList.bestAtValue();
+        Attribute bestAtValue = attrList.bestAtValue();
+        trainningset.pruneSet(bestAtValue, attrList);
         //String[][] aa = trainningset.recoverDate();
         //trainningset.getColumnTarget();
         

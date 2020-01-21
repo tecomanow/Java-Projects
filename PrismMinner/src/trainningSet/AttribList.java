@@ -48,6 +48,7 @@ public class AttribList {
     public Attribute bestAtValue() throws IOException {
 
         TrainningSet ts = new TrainningSet();
+        //AttribList attrListDados = ts.pegarDados("trainningSet");
         AttribList attrListDados = ts.pegarDados("trainningSet");
         AttribList possiveisAttrValues = ts.pegarAtributos("trainningSet");
         int index = 0;
@@ -183,4 +184,6 @@ public class AttribList {
         //System.out.println(bestAtValue.name + " = " + bestAtValue.values.get(0).name);
         return bestAtValue;
     }
+
+
 }

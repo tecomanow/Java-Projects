@@ -40,6 +40,34 @@ public class TrainningSet {
         return myClone;
     }
 
+    public void pruneSet(Attribute bestAtValue, AttribList attribListDados) throws IOException {
+
+        int index = 0;
+
+        for (int i = 0; i < AttribListDados.attributes.size(); i++) {
+            Attribute atual = AttribListDados.attributes.get(i);
+            for (int j = 0; j < atual.values.size(); j++) {
+                Value atualValue = atual.values.get(j);
+                if (atualValue.name.equals(bestAtValue.values.get(0).name)) {
+                    //System.out.println(atual.name + " == " + atualValue.name);
+                    //System.out.println(j);
+                    index = atual.values.indexOf(atualValue);
+                    //System.out.println(index);
+                    criaNovaLista(index, attribListDados);
+                }
+
+            }
+        }
+
+        /*       for (int i = 0; i < aux.attributes.size(); i++) {
+            Attribute atual = aux.attributes.get(i);
+            for (int j = 0; j < atual.values.size(); j++) {
+                Value atualValue = atual.values.get(j);
+                System.out.println(atual.name + " " + atualValue.name);
+            }
+        }*/
+    }
+
     public AttribList pegarDados(String arq) throws IOException {
 
         String local = "src/arquivos/" + arq + ".txt";
@@ -182,22 +210,6 @@ public class TrainningSet {
 
     }
 
-    public void verificarAtributos(AttribList attrList) {
-
-        for (int k = 0; k < attrList.attributes.size(); k++) {
-
-            Attribute teste = attrList.attributes.get(k);
-
-            System.out.println("=========ATRIBUTO============");
-            System.out.println("Atributo: " + teste.name);
-            System.out.println("Valores:");
-            for (int i = 0; i < teste.values.size(); i++) {
-                System.out.println(teste.values.get(i).name);
-            }
-        }
-
-    }
-
     public static String removeParenteses(String palavra) {
 
         String palavraAux = "";
@@ -207,4 +219,44 @@ public class TrainningSet {
 
         return palavraAux;
     }
+
+    private void criaNovaLista(int index, AttribList attribListDados) throws IOException {
+
+        Attribute atributo;
+        Value valorAtributo;
+        AttribList attribList = new AttribList();
+
+        Attribute atualClass = AttribListDados.classAttribute;
+
+        for (int i = 0; i < AttribListDados.attributes.size(); i++) {
+            Attribute atual = AttribListDados.attributes.get(i);
+
+            for (int j = 0; j < atual.values.size(); j++) {
+                Value atualValue = atual.values.get(j);
+                Value atualClassValue = atualClass.values.get(j);
+
+                if (index == j) {
+                    atributo = new Attribute(atual.name);
+                    valorAtributo = new Value(atualValue.name);
+                    atributo.values.add(valorAtributo);
+                    attribList.classAttribute = new Attribute(atualClass.name);
+                    attribList.classAttribute.values.add(atualClassValue);
+                    attribList.attributes.add(atributo);
+                }
+            }
+        }
+
+        for (int i = 0; i < attribList.attributes.size(); i++) {
+            Attribute atualx = attribList.attributes.get(i);
+            for (int j = 0; j < atualx.values.size(); j++) {
+                Value atualValuex = atualx.values.get(j);
+                System.out.println(atualx.name + " == " + atualValuex.name + " == " + attribList.classAttribute.values.get(j).name);
+            }
+
+        }
+
+        //Attribute bav = attribList.bestAtValue(attribList);
+        // System.out.println(bav.name + " == " + bav.values.get(0).name);
+    }
+
 }
