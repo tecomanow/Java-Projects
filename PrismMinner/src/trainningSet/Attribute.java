@@ -4,8 +4,8 @@ import java.util.ArrayList;
 
 public class Attribute {
 	
-	String name;
-	ArrayList<Value> values = new ArrayList<Value>();
+	public String name;
+	public ArrayList<Value> values = new ArrayList<Value>();
         
 	public Attribute(String name) {
 		super();

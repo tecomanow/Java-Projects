@@ -8,12 +8,12 @@ import java.util.Map;
 
 public class AttribList {
 
-    ArrayList<Attribute> attributes;
-    Attribute classAttribute;
-    Map<String, Integer> mapOcorrencia = new HashMap<String, Integer>();
-    Map<String, Integer> mapFrequencia = new HashMap<String, Integer>();
+    public ArrayList<Attribute> attributes;
+    public Attribute classAttribute;
+/*    Map<String, Integer> mapOcorrencia = new HashMap<String, Integer>();
+    Map<String, Integer> mapFrequencia = new HashMap<String, Integer>();*/
 
-    AttribList() {
+    public AttribList() {
 
         attributes = new ArrayList<Attribute>();
     }
@@ -45,7 +45,7 @@ public class AttribList {
         classAttribute = attr;
     }
 
-    public Attribute bestAtValue() throws IOException {
+/*    public Attribute bestAtValue() throws IOException {
 
         TrainningSet ts = new TrainningSet();
         //AttribList attrListDados = ts.pegarDados("trainningSet");
@@ -183,7 +183,7 @@ public class AttribList {
         
         //System.out.println(bestAtValue.name + " = " + bestAtValue.values.get(0).name);
         return bestAtValue;
-    }
+    }*/
 
 
 }
