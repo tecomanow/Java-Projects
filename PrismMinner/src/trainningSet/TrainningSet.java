@@ -7,16 +7,18 @@ import java.io.*;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
-
+import prism.Rules;
 
 public class TrainningSet {
 
     AttribList attrList;
     AttribList attrListDados;
-    Map<String, Integer> mapOcorrencia = new HashMap<String, Integer>();
-    Map<String, Integer> mapFrequencia = new HashMap<String, Integer>();
-
+    AttribList attrListNovo = new AttribList();
+    ;
+    Map<String, Integer> mapOcorrencia;
+    Map<String, Integer> mapFrequencia;
 
     /**
      * Create a constructor for trainningSet, in this case when we instantiate
@@ -25,14 +27,19 @@ public class TrainningSet {
     public TrainningSet() {
         //this.trainningSet = TrainningSet.lerArquivos();
     }
-    
-    public void setListDados(AttribList attrListDados){
+
+    public void setListDados(AttribList attrListDados) {
         this.attrListDados = attrListDados;
     }
-    
-    public void setListAtributos(AttribList attrList){
+
+    public void setListAtributos(AttribList attrList) {
         this.attrList = attrList;
     }
+    
+    public AttribList getListAtributos(){
+        return attrList;
+    }
+    
 
     /**
      * This method creates a training set identical to this and returns it
@@ -46,9 +53,11 @@ public class TrainningSet {
 
     public Attribute bestAtValue(Value value) throws IOException {
 
-        TrainningSet ts = new TrainningSet();
+        mapFrequencia = new HashMap<String, Integer>();
+
+        //TrainningSet ts = new TrainningSet();
         //AttribList attrListDados = ts.pegarDados("trainningSet");
-         //= ts.pegarAtributos("trainningSet");
+        //= ts.pegarAtributos("trainningSet");
         int index = 0;
         int frequenciaAtt = 0;
 
@@ -94,6 +103,7 @@ public class TrainningSet {
     }
 
     public void contarFrequencia() throws IOException {
+        mapOcorrencia = new HashMap<String, Integer>();
 
         TrainningSet ts = new TrainningSet();
         //AttribList attrListDados = ts.pegarDados("trainningSet");
@@ -170,21 +180,25 @@ public class TrainningSet {
                     bestAtValue = attrAtual2;
                     probabilidade = valorAtualAttr2.getProbability();
                     //System.out.println(probabilidade);
-                    System.out.println("===============");
-                    System.out.println("O melhor atributo-valor é: ");
-                    System.out.println("Atributo: " + bestAtValue.name + " - " + valorAtualAttr2.name + " | Probabilidade: " + valorAtualAttr2.getProbability());
-                    System.out.println("===============");
+
                 }
             }
         }
+
+        System.out.println("=============================================");
+        System.out.println("O melhor atributo-valor é: ");
+        System.out.println("Atributo: " + bestAtValue.name + " - " + bestAtValue.values.get(0).name + " | Probabilidade: " + bestAtValue.values.get(0).getProbability());
+        System.out.println("=============================================");
 
         //System.out.println(bestAtValue.name + " = " + bestAtValue.values.get(0).name);
         return bestAtValue;
     }
 
-    public void pruneSet(Attribute bestAtValue, AttribList attribListDados) throws IOException {
+    public TrainningSet selectSet(Attribute bestAtValue) throws IOException {
 
         int index = 0;
+        List<Integer> listIndex = new ArrayList<Integer>();
+        TrainningSet novoSet = new TrainningSet();
 
         for (int i = 0; i < attrListDados.attributes.size(); i++) {
             Attribute atual = attrListDados.attributes.get(i);
@@ -195,11 +209,18 @@ public class TrainningSet {
                     //System.out.println(j);
                     index = atual.values.indexOf(atualValue);
                     //System.out.println(index);
-                    criaNovaLista(index, attribListDados);
+                    //Manda por exemplo o index 2, na função cria lista vai criar um atributo
+                    //Onde o index for dois, depois vai criar o mesmo atributo novamente, mas não adicionar o value 
+                    //há um que já foi adicionado
+                    listIndex.add(index);
+                    //criaNovaLista(index);
                 }
 
             }
         }
+
+        novoSet.setListDados(criaNovaLista(listIndex));
+        novoSet.setListAtributos(attrList);
 
         /*       for (int i = 0; i < aux.attributes.size(); i++) {
             Attribute atual = aux.attributes.get(i);
@@ -208,6 +229,7 @@ public class TrainningSet {
                 System.out.println(atual.name + " " + atualValue.name);
             }
         }*/
+        return novoSet;
     }
 
     public static String removeParenteses(String palavra) {
@@ -220,43 +242,53 @@ public class TrainningSet {
         return palavraAux;
     }
 
-    private void criaNovaLista(int index, AttribList attribListDados) throws IOException {
+    private AttribList criaNovaLista(List<Integer> listIndex) throws IOException {
 
-        Attribute atributo;
+        Attribute atributo = null;
         Value valorAtributo;
-        AttribList attribList = new AttribList();
 
+        attrListNovo = new AttribList();
+        attrListNovo.classAttribute = new Attribute("Class");
         Attribute atualClass = attrListDados.classAttribute;
+        attrListNovo.classAttribute = new Attribute(atualClass.name);
 
-        for (int i = 0; i < attrListDados.attributes.size(); i++) {
-            Attribute atual = attrListDados.attributes.get(i);
+        for (Attribute atual : attrListDados.attributes) {
+            atributo = new Attribute(atual.name);
+            for (Integer inte : listIndex) {
+                Value atualValue = atual.values.get(inte);
+                Value atualClassValue = atualClass.values.get(inte);
 
-            for (int j = 0; j < atual.values.size(); j++) {
-                Value atualValue = atual.values.get(j);
-                Value atualClassValue = atualClass.values.get(j);
+                atributo.values.add(atualValue);
+                attrListNovo.classAttribute.addValue(atualClassValue);
 
-                if (index == j) {
-                    atributo = new Attribute(atual.name);
-                    valorAtributo = new Value(atualValue.name);
-                    atributo.values.add(valorAtributo);
-                    attribList.classAttribute = new Attribute(atualClass.name);
-                    attribList.classAttribute.values.add(atualClassValue);
-                    attribList.attributes.add(atributo);
+                if (!attrListNovo.attributes.contains(atributo)) {
+                    attrListNovo.attributes.add(atributo);
                 }
+                //System.out.println(attrListNovo.attributes.size());
+                //}
             }
         }
 
-        for (int i = 0; i < attribList.attributes.size(); i++) {
-            Attribute atualx = attribList.attributes.get(i);
+ /*for (int i = 0; i < attrListNovo.attributes.size(); i++) {
+            Attribute atualx = attrListNovo.attributes.get(i);
+            System.out.println(i + "° Atributo: " + atualx.name);
+            //System.out.println();
             for (int j = 0; j < atualx.values.size(); j++) {
                 Value atualValuex = atualx.values.get(j);
-                System.out.println(atualx.name + " == " + atualValuex.name + " == " + attribList.classAttribute.values.get(j).name);
+                System.out.println(atualValuex.name + " == " + attrListNovo.classAttribute.values.get(j).name);
             }
 
-        }
+        }*/
 
-        //Attribute bav = attribList.bestAtValue(attribList);
-        // System.out.println(bav.name + " == " + bav.values.get(0).name);
+        return attrListNovo;
+    }
+
+    public boolean hasNoClassValue(Value v) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    public TrainningSet pruneSet(Rules R) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
 }

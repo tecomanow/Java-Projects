@@ -3,7 +3,7 @@ package trainningSet;
 public class Value {
 
     String name;
-    float probability = 0;
+    public float probability = 0;
 
     public Value(String name) {
         super();
