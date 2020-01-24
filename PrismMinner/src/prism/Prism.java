@@ -24,7 +24,7 @@ public class Prism {
         d.pegarAtributos(trainningset);
         d.pegarDados(trainningset);
         Value v = new Value("None");
-        trainningset.bestAtValue(v);
+        //trainningset.bestAtValue(v);
         //AttribList attrList = trainningset.pegarDados("trainningSet");
         //AttribList attrListTotal = trainningset.pegarAtributos("trainningSet");
         //Attribute bestAtValue = trainningset.bestAtValue();

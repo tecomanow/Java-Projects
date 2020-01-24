@@ -13,7 +13,7 @@ import java.util.Map;
 public class TrainningSet {
 
     AttribList attrList;
-    AttribList attrListDados;
+    public AttribList attrListDados;
     Map<String, Integer> mapOcorrencia = new HashMap<String, Integer>();
     Map<String, Integer> mapFrequencia = new HashMap<String, Integer>();
 
