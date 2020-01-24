@@ -258,5 +258,13 @@ public class TrainningSet {
         //Attribute bav = attribList.bestAtValue(attribList);
         // System.out.println(bav.name + " == " + bav.values.get(0).name);
     }
+    
+    public boolean hasClassValue(Value classValue){
+        for(Value v : this.attrListDados.classAttribute.values)
+            if(v.name==classValue.name)
+                return true;
+        
+        return false;
+    }
 
 }
