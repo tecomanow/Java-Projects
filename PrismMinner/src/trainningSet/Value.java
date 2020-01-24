@@ -25,7 +25,7 @@ public class Value {
     public void setProbability(float probability) {
         this.probability = probability;
     }
-    
-    
+
+
 
 }

@@ -16,7 +16,7 @@ public class TrainningSet {
     AttribList attrList;
     AttribList attrListDados;
     AttribList attrListNovo = new AttribList();
-    ;
+    
     Map<String, Integer> mapOcorrencia;
     Map<String, Integer> mapFrequencia;
 
@@ -35,11 +35,11 @@ public class TrainningSet {
     public void setListAtributos(AttribList attrList) {
         this.attrList = attrList;
     }
-    
+
     public AttribList getListAtributos(){
         return attrList;
     }
-    
+
 
     /**
      * This method creates a training set identical to this and returns it
@@ -210,7 +210,7 @@ public class TrainningSet {
                     index = atual.values.indexOf(atualValue);
                     //System.out.println(index);
                     //Manda por exemplo o index 2, na função cria lista vai criar um atributo
-                    //Onde o index for dois, depois vai criar o mesmo atributo novamente, mas não adicionar o value 
+                    //Onde o index for dois, depois vai criar o mesmo atributo novamente, mas não adicionar o value
                     //há um que já foi adicionado
                     listIndex.add(index);
                     //criaNovaLista(index);
@@ -289,6 +289,14 @@ public class TrainningSet {
 
     public TrainningSet pruneSet(Rules R) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    public boolean hasClassValue(Value classValue){
+        for(Value v : this.attrListDados.classAttribute.values)
+            if(v.name==classValue.name)
+                return true;
+
+        return false;
     }
 
 }

@@ -25,7 +25,7 @@ public class Rules {
         } else {
             this.condition += " and " + condition;
         }
-        
+
         if(bestValue.values.get(0).getProbability() == 1){
             rule = this.condition + " -> " + v.getName();
         }
