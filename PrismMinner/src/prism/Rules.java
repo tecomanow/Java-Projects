@@ -6,7 +6,12 @@ import trainningSet.Value;
 
 public class Rules {
 	
-	private String rule;
+	public String rule;
+        public Value classValue;
+        
+        public Rules(Value classValue){
+            this.classValue = classValue;
+        }
 
 	public String getRule() {
 		return this.rule;

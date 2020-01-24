@@ -18,5 +18,8 @@ public class RulesList {
 		rulesList.add(rule);
 	}
 
-
+        public void getRules(){
+            for (Rules r : this.rulesList)
+                System.out.println(r.rule + "->" + r.classValue);
+        }
 }
