@@ -20,6 +20,6 @@ public class RulesList {
 
         public void getRules(){
             for (Rules r : this.rulesList)
-                System.out.println(r.rule + "->" + r.classValue);
+                System.out.println(r.rule + " -> " + r.classValue);
         }
 }

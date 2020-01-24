@@ -21,13 +21,13 @@ public class Rules {
 		this.rule = rule;
 	}
 	
-	public void addCondition (Value v, TrainningSet ts){
+	public void addCondition (Value bestAtValue, TrainningSet ts){
             String condition = new String();
             
             for (Attribute a : ts.attrListDados.attributes)
                 for (Value va : a.values)
-                    if (v.name==va.name)
-                        condition = "(" + a.name + "=" + v.name + ")";
+                    if (bestAtValue.name==va.name)
+                        condition = "(" + a.name + "=" + bestAtValue.name + ")";
             
             if (this.rule == null)
                 this.rule = condition; 
