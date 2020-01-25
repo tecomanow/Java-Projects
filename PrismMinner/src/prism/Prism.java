@@ -33,7 +33,7 @@ public class Prism {
         //Attribute bestAtValue2 = aux.bestAtValue(v);
         //aux = aux.selectSet(bestAtValue2);
         //for (Value v : attrList.getClassValues()) {
-        Attribute at = trainningset.bestAtValue(v);
+        Attribute at;
 
         Rules R = new Rules();
         do {
