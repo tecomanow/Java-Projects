@@ -75,6 +75,7 @@ public class TrainningSet {
                 Value valorClasse = valoresClasse.get(index);
 
                 if (valorClasse.name.equals(v.name)) {
+                    //System.out.println(valueAtribute.name);
 
                     if (mapFrequencia.containsKey(valueAtribute.name)) {
                         mapFrequencia.put(valueAtribute.name, mapFrequencia.get(valueAtribute.name) + 1);
@@ -96,7 +97,7 @@ public class TrainningSet {
         // }
 
         contarFrequencia();
-
+        System.out.printf("%s -  %s\n",mapFrequencia,mapOcorrencia);
         Attribute bestAtValue = calcularProbabilidade(mapFrequencia, mapOcorrencia);
 
         return bestAtValue;
@@ -113,7 +114,7 @@ public class TrainningSet {
             Attribute atributo = attrListDados.attributes.get(n);
 
             for (Value val : atributo.values) {
-
+                //System.out.println(val.name);
                 //System.out.println(attAttributeValue.name + "==" + valores.get(l).name);
                 if (mapOcorrencia.containsKey(val.name)) {
                     mapOcorrencia.put(val.name, mapOcorrencia.get(val.name) + 1);
@@ -177,6 +178,7 @@ public class TrainningSet {
         for (Attribute attrAtual2 : atributosCandidatos) {
             for (Value valorAtualAttr2 : attrAtual2.values) {
                 if (valorAtualAttr2.getProbability() > probabilidade) {
+                    //System.out.println(valorAtualAttr2.getProbability());
                     bestAtValue = attrAtual2;
                     probabilidade = valorAtualAttr2.getProbability();
                     //System.out.println(probabilidade);
@@ -186,7 +188,7 @@ public class TrainningSet {
         }
 
         System.out.println("=============================================");
-        System.out.println("O melhor atributo-valor é: ");
+        System.out.println("O melhor atributo-5valor é: ");
         System.out.println("Atributo: " + bestAtValue.name + " - " + bestAtValue.values.get(0).name + " | Probabilidade: " + bestAtValue.values.get(0).getProbability());
         System.out.println("=============================================");
 
@@ -195,11 +197,9 @@ public class TrainningSet {
     }
 
     public TrainningSet selectSet(Attribute bestAtValue) throws IOException {
-
         int index = 0;
         List<Integer> listIndex = new ArrayList<Integer>();
         TrainningSet novoSet = new TrainningSet();
-
         for (int i = 0; i < attrListDados.attributes.size(); i++) {
             Attribute atual = attrListDados.attributes.get(i);
             for (int j = 0; j < atual.values.size(); j++) {
@@ -243,10 +243,8 @@ public class TrainningSet {
     }
 
     private AttribList criaNovaLista(List<Integer> listIndex) throws IOException {
-
         Attribute atributo = null;
         Value valorAtributo;
-
         attrListNovo = new AttribList();
         attrListNovo.classAttribute = new Attribute("Class");
         Attribute atualClass = attrListDados.classAttribute;
@@ -263,6 +261,9 @@ public class TrainningSet {
 
                 if (!attrListNovo.attributes.contains(atributo)) {
                     attrListNovo.attributes.add(atributo);
+                    for(Value vv : atributo.getValues()){
+                        //System.out.println(vv.name);
+                    }
                 }
                 //System.out.println(attrListNovo.attributes.size());
                 //}
@@ -282,13 +283,121 @@ public class TrainningSet {
 
         return attrListNovo;
     }
+    
+    private AttribList CriaNovaListaPrune(String at) throws IOException {
+
+        Attribute atributo = null;
+        Value valorAtributo;
+        int count;
+        
+        attrListNovo = new AttribList();
+        attrListNovo.classAttribute = new Attribute("Class");
+        Attribute atualClass = attrListDados.classAttribute;
+        attrListNovo.classAttribute = new Attribute(atualClass.name);
+
+        for (Attribute atual : attrListDados.attributes) {
+            atributo = new Attribute(atual.name);
+            if(!atual.name.equals(at)){
+                for (count = 0; count < atual.values.size(); count++) {
+                    Value atualValue = atual.values.get(count);
+                    //System.out.printf("%s -> %s -> %s\n", atual.name, atual.values.get(count).name, atualClass.values.get(count).name);
+                    Value atualClassValue = atualClass.values.get(count);
+                    atributo.values.add(atualValue);
+                    attrListNovo.classAttribute.addValue(atualClassValue);
+                    
+                    if (!attrListNovo.attributes.contains(atributo)) {
+                    attrListNovo.attributes.add(atributo);
+                    }
+                    //System.out.println(attrListNovo.attributes.size());
+                    //}
+                }
+                
+            }
+            
+        }
+        
+        for (Attribute attrAtual : attrListNovo.attributes) {
+            //System.out.println(attrAtual.name);
+            for(Value valueAtual : attrAtual.values){
+                //System.out.printf("%s -> %s\n", attrAtual.name, valueAtual.name);
+            }
+        }
+        
+
+ /*for (int i = 0; i < attrListNovo.attributes.size(); i++) {
+            Attribute atualx = attrListNovo.attributes.get(i);
+            System.out.println(i + "° Atributo: " + atualx.name);
+            //System.out.println();
+            for (int j = 0; j < atualx.values.size(); j++) {
+                Value atualValuex = atualx.values.get(j);
+                System.out.println(atualValuex.name + " == " + attrListNovo.classAttribute.values.get(j).name);
+            }
+
+        }*/
+
+        return attrListNovo;
+        
+    }
 
     public boolean hasNoClassValue(Value v) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
-    public TrainningSet pruneSet(Rules R) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public TrainningSet pruneSet(Attribute bestAtValue) throws IOException{
+        TrainningSet novoSet = new TrainningSet();
+        AttribList attrListx;
+        Attribute atributo = null;
+        int count = 0;
+        Value valoratributo;
+        novoSet.setListDados(CriaNovaListaPrune(bestAtValue.name));
+        //System.out.println(attrList.attributes.get(3).name);
+        //System.out.println(attrList.attributes.get(3).values.get(1).name);
+        
+        
+        attrListNovo = new AttribList();
+        attrListNovo.classAttribute = new Attribute("Class");
+        Attribute atualClass = attrListDados.classAttribute;
+        
+        //System.out.println(attrList.classAttribute.values.get(2).name);
+        //System.out.println(attrList.classAttribute.name);
+        //System.out.println(attrList.attributes.get(3).name);
+        //System.out.println(attrList.attributes.get(0).values.get(0).name);
+        
+        for (Attribute attrAtual : attrList.attributes) {
+            if(!attrAtual.name.equals(bestAtValue.name)){
+                attrListNovo.attributes.add(attrAtual);
+            }
+        }
+        
+        for (Value valueclass : attrList.classAttribute.getValues()) {
+            attrListNovo.classAttribute.addValue(attrList.classAttribute.getValues().get(count));
+            count++;
+        }
+        
+        
+        //System.out.println(attrList.getClassValues().get(3).name);
+        //System.out.println(attrListNovo.attributes.get(0).name);
+        //System.out.println(attrListNovo.attributes.get(0).values);
+        //System.out.println(attrListNovo.attributes.get(1).name);
+        //System.out.println(attrListNovo.attributes.get(2).name);
+        //System.out.println(attrListNovo.classAttribute.name);
+        //System.out.println(attrListNovo.classAttribute.values.get(0).name);
+        //System.out.println(attrListNovo.classAttribute.values.get(1).name);
+        //System.out.println(attrListNovo.classAttribute.values.get(2).name);
+        
+        novoSet.setListAtributos(attrListNovo);
+        
+        this.attrListDados = attrListNovo;
+        
+           /* for (int i = 0; i < aux.attributes.size(); i++) {
+            Attribute atual = aux.attributes.get(i);
+            for (int j = 0; j < atual.values.size(); j++) {
+                Value atualValue = atual.values.get(j);
+                System.out.println(atual.name + " " + atualValue.name);
+            }
+        }*/
+        return novoSet;
+       
     }
 
     public boolean hasClassValue(Value classValue){

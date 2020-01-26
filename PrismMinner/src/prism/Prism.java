@@ -23,7 +23,8 @@ public class Prism {
         Dados d = new Dados();
         d.pegarAtributos(trainningset);
         d.pegarDados(trainningset);
-        Value v = new Value("Hard");
+        Value v = new Value("None");
+        int count = 0;
 
         //System.out.println(at.name);
         //TrainningSet aux = trainningset.selectSet(at);
@@ -33,22 +34,52 @@ public class Prism {
         //Attribute bestAtValue2 = aux.bestAtValue(v);
         //aux = aux.selectSet(bestAtValue2);
         //for (Value v : attrList.getClassValues()) {
+        
         Attribute at;
-
-        Rules R = new Rules();
-        do {
+        Rules Rp = new Rules(); // Regra criada pelo Prune
+        Rules Rs = new Rules(); // Regra criada pelo Select
+        RulesList rl = new RulesList();
+        while(true){
+            //System.out.println(trainningset.getListAtributos().attributes.get(0).values.size());
+            at = trainningset.bestAtValue(v);
+            if (at.values.get(0).probability == 1){
+                if (count == 0){
+                    // Prune
+                    Rp.addCondition(at, v);
+                    //trainningset.pruneSet(at);
+                    trainningset = trainningset.pruneSet(at);
+                    //trainningset = trainningset.pruneSet(at);
+                }
+                else{
+                    Rs.addCondition(at, v);
+                    trainningset = trainningset.selectSet(at);
+                    break;
+                }
+            }
+            else{
+                Rs.addCondition(at, v);
+                trainningset = trainningset.selectSet(at);
+            }
+            count++;
+        }
+            /*do{
             at = trainningset.bestAtValue(v);
             R.addCondition(at, v);
-            trainningset = trainningset.selectSet(at);
-        } while (at.values.get(0).probability != 1);
+        }while (at.values.get(0).probability != 1);*/
+        
+        // while (at.values.get(0).probability != 1);
+        
+        if (Rp.getRule() != null){
+        System.out.println(Rp.getRule());//}
+    }   
+        System.out.println(Rs.getRule());
 
-        System.out.println(R.getRule());//}
 
     }
 
     public RulesList mine(AttribList attrList, TrainningSet set) throws IOException {
         RulesList rulesList = new RulesList();
-        //Arqui vou percorrer a lista de valores de classe dos atributos
+        //Aqui vou percorrer a lista de valores de classe dos atributos
         //e armazenar temporariamente em v para fazer pegar alguma regra
         //uma vez que depois eu tenho que fazer as regras para todos os valores
         //de classes
