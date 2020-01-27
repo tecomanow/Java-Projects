@@ -98,9 +98,12 @@ public class TrainningSet {
 
         contarFrequencia();
         System.out.printf("%s -  %s\n",mapFrequencia,mapOcorrencia);
-        Attribute bestAtValue = calcularProbabilidade(mapFrequencia, mapOcorrencia);
-
-        return bestAtValue;
+        if(!mapOcorrencia.isEmpty()){
+            Attribute bestAtValue = calcularProbabilidade(mapFrequencia, mapOcorrencia);
+            return bestAtValue;
+        }
+        
+        return null;
     }
 
     public void contarFrequencia() throws IOException {
@@ -188,7 +191,7 @@ public class TrainningSet {
         }
 
         System.out.println("=============================================");
-        System.out.println("O melhor atributo-5valor é: ");
+        System.out.println("O melhor atributo-valor é: ");
         System.out.println("Atributo: " + bestAtValue.name + " - " + bestAtValue.values.get(0).name + " | Probabilidade: " + bestAtValue.values.get(0).getProbability());
         System.out.println("=============================================");
 
@@ -196,31 +199,72 @@ public class TrainningSet {
         return bestAtValue;
     }
 
-    public TrainningSet selectSet(Attribute bestAtValue) throws IOException {
+    public TrainningSet selectSet(Attribute bestAtValue, int k) throws IOException {
+        //System.out.println(attrListDados.attributes.size());
         int index = 0;
+        int count = 0;
         List<Integer> listIndex = new ArrayList<Integer>();
         TrainningSet novoSet = new TrainningSet();
-        for (int i = 0; i < attrListDados.attributes.size(); i++) {
-            Attribute atual = attrListDados.attributes.get(i);
-            for (int j = 0; j < atual.values.size(); j++) {
-                Value atualValue = atual.values.get(j);
-                if (atualValue.name.equals(bestAtValue.values.get(0).name)) {
-                    //System.out.println(atual.name + " == " + atualValue.name);
-                    //System.out.println(j);
-                    index = atual.values.indexOf(atualValue);
-                    //System.out.println(index);
-                    //Manda por exemplo o index 2, na função cria lista vai criar um atributo
-                    //Onde o index for dois, depois vai criar o mesmo atributo novamente, mas não adicionar o value
-                    //há um que já foi adicionado
-                    listIndex.add(index);
-                    //criaNovaLista(index);
+        attrListNovo = new AttribList();
+        
+        // Esse primeiro if checa se os atributos são o mesmo da tabela original
+        // Caso nãos seja ele entra nesse primeiro if, que é o caso de ocorrer uma regra 100% única
+        if(attrListDados.attributes.size() != k)
+        {
+            for (Attribute at : attrListDados.attributes){
+                for(Value va : at.values){
+                    //System.out.printf("%s -> %s\n", at.name, va.name);
+                    if(bestAtValue.name.equals(at.name)){
+                        if(va.name.equals(bestAtValue.values.get(0).name)){
+                            //System.out.println("x");
+                            index = at.values.indexOf(va);
+                            listIndex.add(index);
+                        }
+                    }
                 }
-
             }
-        }
 
-        novoSet.setListDados(criaNovaLista(listIndex));
+            if (listIndex.isEmpty()){
+                return null;
+            }
+            
+            attrListNovo = criaNovaLista(listIndex);
+            //novoSet.setListDados(criaNovaLista(listIndex));
+            novoSet.setListDados(CriaNovaListaPrune(bestAtValue.name, attrListNovo));
+            
+        }
+        // Caso sejam iguais ele entra no else
+        // tratando as linhas de outra maneira
+        else
+        {
+            for (int i = 0; i < attrListDados.attributes.size(); i++) {
+                Attribute atual = attrListDados.attributes.get(i);
+                for (int j = 0; j < atual.values.size(); j++) {
+                    Value atualValue = atual.values.get(j);
+                    if (atualValue.name.equals(bestAtValue.values.get(0).name)) {
+                        //System.out.println(atualValue.name);
+                        //System.out.println(atual.name + " == " + atualValue.name);
+                        //System.out.println(j);
+                        index = atual.values.indexOf(atualValue);
+                        //Manda por exemplo o index 2, na função cria lista vai criar um atributo
+                        //Onde o index for dois, depois vai criar o mesmo atributo novamente, mas não adicionar o value
+                        //há um que já foi adicionado
+                        listIndex.add(index);
+                        //criaNovaLista(index);
+                    }
+
+                }
+            }
+            novoSet.setListDados(criaNovaLista(listIndex));
+        }
+        
+        /*for(Attribute attr : attrListNovo.attributes){
+            for(Value valu : attr.values){
+                System.out.printf("%s -> %s\n",attr.name,valu.name);
+            }
+        }*/
         novoSet.setListAtributos(attrList);
+        
 
         /*       for (int i = 0; i < aux.attributes.size(); i++) {
             Attribute atual = aux.attributes.get(i);
@@ -280,11 +324,12 @@ public class TrainningSet {
             }
 
         }*/
+        
 
         return attrListNovo;
     }
     
-    private AttribList CriaNovaListaPrune(String at) throws IOException {
+    private AttribList CriaNovaListaPrune(String at, AttribList al) throws IOException {
 
         Attribute atributo = null;
         Value valorAtributo;
@@ -292,10 +337,10 @@ public class TrainningSet {
         
         attrListNovo = new AttribList();
         attrListNovo.classAttribute = new Attribute("Class");
-        Attribute atualClass = attrListDados.classAttribute;
+        Attribute atualClass = al.classAttribute;
         attrListNovo.classAttribute = new Attribute(atualClass.name);
 
-        for (Attribute atual : attrListDados.attributes) {
+        for (Attribute atual : al.attributes) {
             atributo = new Attribute(atual.name);
             if(!atual.name.equals(at)){
                 for (count = 0; count < atual.values.size(); count++) {
@@ -349,7 +394,12 @@ public class TrainningSet {
         Attribute atributo = null;
         int count = 0;
         Value valoratributo;
-        novoSet.setListDados(CriaNovaListaPrune(bestAtValue.name));
+        
+        
+        novoSet.setListDados(CriaNovaListaPrune(bestAtValue.name, attrListDados));
+        if(novoSet.attrListDados.attributes.size() == 0){
+            return null;
+        }
         //System.out.println(attrList.attributes.get(3).name);
         //System.out.println(attrList.attributes.get(3).values.get(1).name);
         
@@ -363,7 +413,7 @@ public class TrainningSet {
         //System.out.println(attrList.attributes.get(3).name);
         //System.out.println(attrList.attributes.get(0).values.get(0).name);
         
-        for (Attribute attrAtual : attrList.attributes) {
+        /*for (Attribute attrAtual : attrList.attributes) {
             if(!attrAtual.name.equals(bestAtValue.name)){
                 attrListNovo.attributes.add(attrAtual);
             }
@@ -372,7 +422,7 @@ public class TrainningSet {
         for (Value valueclass : attrList.classAttribute.getValues()) {
             attrListNovo.classAttribute.addValue(attrList.classAttribute.getValues().get(count));
             count++;
-        }
+        }*/
         
         
         //System.out.println(attrList.getClassValues().get(3).name);
@@ -385,10 +435,11 @@ public class TrainningSet {
         //System.out.println(attrListNovo.classAttribute.values.get(1).name);
         //System.out.println(attrListNovo.classAttribute.values.get(2).name);
         
-        novoSet.setListAtributos(attrListNovo);
         
-        this.attrListDados = attrListNovo;
+        novoSet.setListAtributos(attrList);
+        //novoSet.setListAtributos(attrListNovo);
         
+        count++;
            /* for (int i = 0; i < aux.attributes.size(); i++) {
             Attribute atual = aux.attributes.get(i);
             for (int j = 0; j < atual.values.size(); j++) {

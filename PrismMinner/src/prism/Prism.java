@@ -23,7 +23,8 @@ public class Prism {
         Dados d = new Dados();
         d.pegarAtributos(trainningset);
         d.pegarDados(trainningset);
-        Value v = new Value("None");
+        Value v = new Value("Soft");
+        int i = trainningset.getListAtributos().attributes.size();
         int count = 0;
 
         //System.out.println(at.name);
@@ -42,6 +43,10 @@ public class Prism {
         while(true){
             //System.out.println(trainningset.getListAtributos().attributes.get(0).values.size());
             at = trainningset.bestAtValue(v);
+            if(at == null){
+                break;
+            }
+            //System.out.printf("==== %s -> %s\n", at.values.get(0).getName(), v.getName());
             if (at.values.get(0).probability == 1){
                 if (count == 0){
                     // Prune
@@ -52,13 +57,16 @@ public class Prism {
                 }
                 else{
                     Rs.addCondition(at, v);
-                    trainningset = trainningset.selectSet(at);
+                    trainningset = trainningset.selectSet(at, i);
                     break;
                 }
             }
             else{
                 Rs.addCondition(at, v);
-                trainningset = trainningset.selectSet(at);
+                trainningset = trainningset.selectSet(at, i);
+            }
+            if (trainningset == null){
+                break;
             }
             count++;
         }
@@ -74,7 +82,6 @@ public class Prism {
     }   
         System.out.println(Rs.getRule());
 
-
     }
 
     public RulesList mine(AttribList attrList, TrainningSet set) throws IOException {
@@ -83,7 +90,7 @@ public class Prism {
         //e armazenar temporariamente em v para fazer pegar alguma regra
         //uma vez que depois eu tenho que fazer as regras para todos os valores
         //de classes
-        Attribute bestValue;
+        /*Attribute bestValue;
         TrainningSet tsAux;
         for (Value v : attrList.getClassValues()) {
             TrainningSet setOriginal = set.createClone();
@@ -99,9 +106,9 @@ public class Prism {
                 set = tsAux.pruneSet(R);
             } while (tsAux.hasNoClassValue(v));
 
-        }
+        }*/
         return null;
-
+        
     }
 
 }
