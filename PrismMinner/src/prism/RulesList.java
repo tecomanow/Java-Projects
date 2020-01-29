@@ -17,9 +17,16 @@ public class RulesList {
 	public void addRules(Rules rule) {
 		rulesList.add(rule);
 	}
+        
+        
 
         /*public void getRules(){
             for (Rules r : this.rulesList)
                 System.out.println(r.rule + " -> " + r.classValue);
         }*/
+
+    public ArrayList<Rules> getRulesList() {
+        return rulesList;
+    }
+
 }

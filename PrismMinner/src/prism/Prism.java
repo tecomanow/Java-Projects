@@ -7,6 +7,8 @@ package prism;
 
 import helper.Dados;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Iterator;
 import trainningSet.AttribList;
 import trainningSet.Attribute;
 import trainningSet.TrainningSet;
@@ -23,26 +25,43 @@ public class Prism {
         Dados d = new Dados();
         d.pegarAtributos(trainningset);
         d.pegarDados(trainningset);
-        Value v = new Value("Hard");
+        //Value v = new Value("Hard");
 
-        //System.out.println(at.name);
-        //TrainningSet aux = trainningset.selectSet(at);
-        //Attribute bestAtValue = aux.bestAtValue(v);
-        //System.out.println(bestAtValue.name);
-        //aux = aux.selectSet(bestAtValue);
-        //Attribute bestAtValue2 = aux.bestAtValue(v);
-        //aux = aux.selectSet(bestAtValue2);
-        //for (Value v : attrList.getClassValues()) {
         Attribute at;
+        TrainningSet trainningSetOriginal = trainningset;
+        RulesList rl = new RulesList();
+        TrainningSet tsAux = null;
+        ArrayList<Attribute> listBestAtt = new ArrayList<Attribute>();
 
-        Rules R = new Rules();
-        do {
-            at = trainningset.bestAtValue(v);
-            R.addCondition(at, v);
-            trainningset = trainningset.selectSet(at);
-        } while (at.values.get(0).probability != 1);
-
-        System.out.println(R.getRule());//}
+        //for (Value v : trainningSetOriginal.getListAtributos().classAttribute.values) {           
+            Value v = new Value("Yes");
+            System.out.println(v.name);
+            do {
+                Rules R = new Rules();
+                tsAux = trainningset;
+                
+                do {
+                    //System.out.println(v.getName());
+                    at = trainningset.bestAtValue(v);
+                    listBestAtt.add(at);
+                    R.addCondition(at, v);
+                    if (!rl.getRulesList().contains(R)) {
+                        rl.addRules(R);
+                    }
+                    trainningset = trainningset.selectSet(at);
+                } while (at.values.get(0).probability != 1);
+                //System.out.println("Chamar o prune");
+                trainningset = tsAux.pruneSet(listBestAtt);
+                listBestAtt.clear();
+                //System.out.println(R.getRule());
+            } while (tsAux.hasClassValue(v));
+            trainningset = trainningSetOriginal;
+            
+        //}
+        
+        for (Rules r : rl.getRulesList()) {
+                System.out.println(r.getRule());
+            }
 
     }
 
@@ -65,9 +84,9 @@ public class Prism {
                     set = set.selectSet(bestValue);
                 } while (bestValue.values.get(0).probability != 1);
                 rulesList.addRules(R);
-                set = tsAux.pruneSet(R);
-            } while (tsAux.hasNoClassValue(v));
-
+                set = tsAux.pruneSet(null);
+            } while (tsAux.hasClassValue(v));
+            set = setOriginal;
         }
         return null;
 

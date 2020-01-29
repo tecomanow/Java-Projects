@@ -2,7 +2,7 @@ package trainningSet;
 
 public class Value {
 
-    String name;
+    public String name;
     public float probability = 0;
 
     public Value(String name) {

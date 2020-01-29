@@ -6,6 +6,8 @@ import java.io.FileNotFoundException;
 import java.io.*;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -13,10 +15,10 @@ import prism.Rules;
 
 public class TrainningSet {
 
-    AttribList attrList;
+    public AttribList attrList;
     AttribList attrListDados;
     AttribList attrListNovo = new AttribList();
-    
+
     Map<String, Integer> mapOcorrencia;
     Map<String, Integer> mapFrequencia;
 
@@ -36,10 +38,9 @@ public class TrainningSet {
         this.attrList = attrList;
     }
 
-    public AttribList getListAtributos(){
+    public AttribList getListAtributos() {
         return attrList;
     }
-
 
     /**
      * This method creates a training set identical to this and returns it
@@ -134,7 +135,6 @@ public class TrainningSet {
 
     public Attribute calcularProbabilidade(Map<String, Integer> frequencia, Map<String, Integer> ocorrencia) throws IOException {
 
-        TrainningSet ts = new TrainningSet();
         //AttribList attrListAtributos = ts.pegarAtributos("trainningSet");
         Attribute atributo = null;
         ArrayList<Attribute> atributosCandidatos = new ArrayList<Attribute>();
@@ -205,15 +205,8 @@ public class TrainningSet {
             for (int j = 0; j < atual.values.size(); j++) {
                 Value atualValue = atual.values.get(j);
                 if (atualValue.name.equals(bestAtValue.values.get(0).name)) {
-                    //System.out.println(atual.name + " == " + atualValue.name);
-                    //System.out.println(j);
                     index = atual.values.indexOf(atualValue);
-                    //System.out.println(index);
-                    //Manda por exemplo o index 2, na função cria lista vai criar um atributo
-                    //Onde o index for dois, depois vai criar o mesmo atributo novamente, mas não adicionar o value
-                    //há um que já foi adicionado
                     listIndex.add(index);
-                    //criaNovaLista(index);
                 }
 
             }
@@ -230,16 +223,6 @@ public class TrainningSet {
             }
         }*/
         return novoSet;
-    }
-
-    public static String removeParenteses(String palavra) {
-
-        String palavraAux = "";
-
-        palavraAux = palavra.replace("(", "");
-        palavraAux = palavraAux.replace(")", "");
-
-        return palavraAux;
     }
 
     private AttribList criaNovaLista(List<Integer> listIndex) throws IOException {
@@ -259,7 +242,10 @@ public class TrainningSet {
                 Value atualClassValue = atualClass.values.get(inte);
 
                 atributo.values.add(atualValue);
-                attrListNovo.classAttribute.addValue(atualClassValue);
+
+                if (!attrListNovo.classAttribute.values.contains(atualClassValue)) {
+                    attrListNovo.classAttribute.addValue(atualClassValue);
+                }
 
                 if (!attrListNovo.attributes.contains(atributo)) {
                     attrListNovo.attributes.add(atributo);
@@ -269,7 +255,7 @@ public class TrainningSet {
             }
         }
 
- /*for (int i = 0; i < attrListNovo.attributes.size(); i++) {
+        /*for (int i = 0; i < attrListNovo.attributes.size(); i++) {
             Attribute atualx = attrListNovo.attributes.get(i);
             System.out.println(i + "° Atributo: " + atualx.name);
             //System.out.println();
@@ -279,24 +265,110 @@ public class TrainningSet {
             }
 
         }*/
-
         return attrListNovo;
     }
 
-    public boolean hasNoClassValue(Value v) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public TrainningSet pruneSet(ArrayList<Attribute> listBestAtt) throws IOException {
+        int index = 0;
+        List<Integer> listIndex = new ArrayList<Integer>();
+        Map<Integer, Integer> contagem = new HashMap<Integer, Integer>();
+        AttribList attrLista = new AttribList();
+
+        Attribute atualClass = attrListDados.classAttribute;
+
+        for (Attribute atributoArgumento : listBestAtt) {
+            Value valorAtributoArgumento = atributoArgumento.values.get(0);
+
+            for (Attribute atributo : attrListDados.attributes) {
+                for (Value valor : atributo.values) {
+
+                    if (valorAtributoArgumento.name.equals(valor.name)) {
+                        index = atributo.values.indexOf(valor);
+                        //System.out.println(index);
+                        if (contagem.containsKey(index)) {
+                            contagem.put(index, contagem.get(index) + 1);
+                        } else {
+                            contagem.put(index, 1);
+                        }
+                    }
+
+                }
+            }
+
+        }
+
+        for (Map.Entry<Integer, Integer> entry : contagem.entrySet()) {
+            //System.out.println(entry.getKey() + " = " + entry.getValue());
+            if (entry.getValue() == listBestAtt.size()) {
+                System.out.println(entry.getKey() + " == " + listBestAtt.size());
+                listIndex.add(entry.getKey());
+            }
+        }
+
+        attrLista = attrListDados;
+        Collections.sort(listIndex);
+        Collections.reverse(listIndex);
+        for (int i = 0; i < attrListDados.attributes.size(); i++) {
+
+            //Attribute atributo = attrListDados.attributes.get(i);
+            //for (int j = 0; j < atributo.values.size(); j++) {
+            for (Integer inte : listIndex) {
+                int x = inte;
+                //Value v = attrListDados.attributes.get(i).values.get(inte);
+                //Value ve = atualClass.values.get(inte);
+
+                attrLista.attributes.get(i).values.remove(x); //attrLista.attributes.get(i).values.remove(v);
+                //attrLista.classAttribute.values.remove(inte);
+                //System.out.println(atributo.name + " " + v.name + " = " + ve.name);
+
+            }
+            //}
+        }
+
+        for (Integer inte : listIndex) {
+            Value ve = atualClass.values.get(inte);
+            int x = inte;
+            //attrLista.attributes.get(i).values.remove(inte);
+            attrLista.classAttribute.values.remove(x);
+            //attrLista.classAttribute.values.
+            //System.out.println(atributo.name + " " + v.name + " = " + ve.name);
+        }
+
+        System.out.println("PRUNEEEEEEEEEEEEE");
+        for (int i = 0; i < attrLista.attributes.size(); i++) {
+            Attribute atributo = attrLista.attributes.get(i);
+            for (int j = 0; j < atributo.values.size(); j++) {
+                Value v = atributo.values.get(j);
+                Value vc = attrLista.classAttribute.values.get(j);
+                System.out.println(atributo.name + " " + atributo.values.get(j).name + " -> " + vc.name);
+            }
+        }
+
+        TrainningSet ts = new TrainningSet();
+        ts.setListDados(attrLista);
+        ts.setListAtributos(attrList);
+
+        return ts;
     }
 
-    public TrainningSet pruneSet(Rules R) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    public boolean hasClassValue(Value classValue){
-        for(Value v : this.attrListDados.classAttribute.values)
-            if(v.name==classValue.name)
+    public boolean hasClassValue(Value classValue) {
+        for (Value v : this.attrListDados.classAttribute.values) {
+            if (v.name.equalsIgnoreCase(classValue.name)) {
                 return true;
+            }
+        }
 
         return false;
+    }
+
+    public static String removeParenteses(String palavra) {
+
+        String palavraAux = "";
+
+        palavraAux = palavra.replace("(", "");
+        palavraAux = palavraAux.replace(")", "");
+
+        return palavraAux;
     }
 
 }
