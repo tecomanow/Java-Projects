@@ -1,0 +1,11 @@
+@attribute Engine (Small,Medium,Large)
+@attribute Turbo (No,Yes)
+@attribute Weight (Average,Light,Heavy)
+@attribute Fuel (Good,Average,Bad)
+@attribute Class (Yes,N)
+
+@data Engine (Small,Small,Small,Medium,Large,Medium,Large,Large,Medium,Large,Small,Small,Medium,Small,Medium)
+@data Turbo (No,No,Yes,No,No,No,Yes,No,Yes,No,No,No,No,Yes,No)
+@data Weight (Average,Light,Average,Heavy,Average,Light,Heavy,Heavy,Light,Average,Light,Average,Heavy,Average,Heavy)
+@data Fuel (Good,Average,Bad,Bad,Bad,Bad,Bad,Bad,Bad,Bad,Good,Average,Bad,Average,Bad)
+@data Class (N,N,Y,Y,Y,N,N,N,Y,Y,N,N,N,N,N)

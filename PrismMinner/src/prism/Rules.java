@@ -18,7 +18,7 @@ public class Rules {
     }
 
     void addCondition(Attribute bestValue, Value v) {
-        String condition = bestValue.name + "=" + bestValue.values.get(0).getName();
+        String condition = bestValue.name + " = " + bestValue.values.get(0).getName();
 
         if (this.condition == null) {
             this.condition = condition;

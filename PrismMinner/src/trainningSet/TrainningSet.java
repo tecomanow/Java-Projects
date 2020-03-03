@@ -13,7 +13,7 @@ import java.util.List;
 import java.util.Map;
 import prism.Rules;
 
-public class TrainningSet {
+public class TrainningSet implements Cloneable {
 
     public AttribList attrList;
     AttribList attrListDados;
@@ -22,13 +22,10 @@ public class TrainningSet {
     Map<String, Integer> mapOcorrencia;
     Map<String, Integer> mapFrequencia;
 
-    /**
-     * Create a constructor for trainningSet, in this case when we instantiate
-     * the class, we already have the array in the object
-     */
-    public TrainningSet() {
-        //this.trainningSet = TrainningSet.lerArquivos();
+    public TrainningSet(){
+        
     }
+    
 
     public void setListDados(AttribList attrListDados) {
         this.attrListDados = attrListDados;
@@ -42,27 +39,14 @@ public class TrainningSet {
         return attrList;
     }
 
-    /**
-     * This method creates a training set identical to this and returns it
-     *
-     * @return
-     */
-    public TrainningSet createClone() {
-        TrainningSet myClone = new TrainningSet();
-        return myClone;
-    }
-
     public Attribute bestAtValue(Value value) throws IOException {
 
         mapFrequencia = new HashMap<String, Integer>();
 
-        //TrainningSet ts = new TrainningSet();
-        //AttribList attrListDados = ts.pegarDados("trainningSet");
-        //= ts.pegarAtributos("trainningSet");
+
         int index = 0;
         int frequenciaAtt = 0;
 
-        //for (Value v : possiveisAttrValues.getClassValues()) {
         Value v = value;
         mapFrequencia.clear();
         for (Attribute att : attrListDados.attributes) {
@@ -107,7 +91,6 @@ public class TrainningSet {
         mapOcorrencia = new HashMap<String, Integer>();
 
         TrainningSet ts = new TrainningSet();
-        //AttribList attrListDados = ts.pegarDados("trainningSet");
 
         for (int n = 0; n < attrListDados.attributes.size(); n++) {
 
@@ -190,7 +173,6 @@ public class TrainningSet {
         System.out.println("Atributo: " + bestAtValue.name + " - " + bestAtValue.values.get(0).name + " | Probabilidade: " + bestAtValue.values.get(0).getProbability());
         System.out.println("=============================================");
 
-        //System.out.println(bestAtValue.name + " = " + bestAtValue.values.get(0).name);
         return bestAtValue;
     }
 
@@ -215,13 +197,6 @@ public class TrainningSet {
         novoSet.setListDados(criaNovaLista(listIndex));
         novoSet.setListAtributos(attrList);
 
-        /*       for (int i = 0; i < aux.attributes.size(); i++) {
-            Attribute atual = aux.attributes.get(i);
-            for (int j = 0; j < atual.values.size(); j++) {
-                Value atualValue = atual.values.get(j);
-                System.out.println(atual.name + " " + atualValue.name);
-            }
-        }*/
         return novoSet;
     }
 
@@ -255,16 +230,6 @@ public class TrainningSet {
             }
         }
 
-        /*for (int i = 0; i < attrListNovo.attributes.size(); i++) {
-            Attribute atualx = attrListNovo.attributes.get(i);
-            System.out.println(i + "° Atributo: " + atualx.name);
-            //System.out.println();
-            for (int j = 0; j < atualx.values.size(); j++) {
-                Value atualValuex = atualx.values.get(j);
-                System.out.println(atualValuex.name + " == " + attrListNovo.classAttribute.values.get(j).name);
-            }
-
-        }*/
         return attrListNovo;
     }
 
@@ -299,8 +264,7 @@ public class TrainningSet {
 
         for (Map.Entry<Integer, Integer> entry : contagem.entrySet()) {
             //System.out.println(entry.getKey() + " = " + entry.getValue());
-            if (entry.getValue() == listBestAtt.size()) {
-                System.out.println(entry.getKey() + " == " + listBestAtt.size());
+            if (entry.getValue() == listBestAtt.size()) {                
                 listIndex.add(entry.getKey());
             }
         }
@@ -310,38 +274,16 @@ public class TrainningSet {
         Collections.reverse(listIndex);
         for (int i = 0; i < attrListDados.attributes.size(); i++) {
 
-            //Attribute atributo = attrListDados.attributes.get(i);
-            //for (int j = 0; j < atributo.values.size(); j++) {
             for (Integer inte : listIndex) {
                 int x = inte;
-                //Value v = attrListDados.attributes.get(i).values.get(inte);
-                //Value ve = atualClass.values.get(inte);
-
-                attrLista.attributes.get(i).values.remove(x); //attrLista.attributes.get(i).values.remove(v);
-                //attrLista.classAttribute.values.remove(inte);
-                //System.out.println(atributo.name + " " + v.name + " = " + ve.name);
-
+                attrLista.attributes.get(i).values.remove(x);
             }
-            //}
         }
 
         for (Integer inte : listIndex) {
             Value ve = atualClass.values.get(inte);
             int x = inte;
-            //attrLista.attributes.get(i).values.remove(inte);
             attrLista.classAttribute.values.remove(x);
-            //attrLista.classAttribute.values.
-            //System.out.println(atributo.name + " " + v.name + " = " + ve.name);
-        }
-
-        System.out.println("PRUNEEEEEEEEEEEEE");
-        for (int i = 0; i < attrLista.attributes.size(); i++) {
-            Attribute atributo = attrLista.attributes.get(i);
-            for (int j = 0; j < atributo.values.size(); j++) {
-                Value v = atributo.values.get(j);
-                Value vc = attrLista.classAttribute.values.get(j);
-                System.out.println(atributo.name + " " + atributo.values.get(j).name + " -> " + vc.name);
-            }
         }
 
         TrainningSet ts = new TrainningSet();
